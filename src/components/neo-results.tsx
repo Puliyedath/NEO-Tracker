@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { NEO } from "@/types/neo";
 import { NEOPreview } from "./neo-preview";
 import { NEODetails } from "./neo-details";
+import { NEOFilters } from "./neo-filters";
+import { useFilteredNeoData } from "@/hooks/useFilteredNeoData";
 
 interface NEOResultsProps {
   data: NEO[];
@@ -16,6 +18,14 @@ interface NEOResultsProps {
 
 export function NEOResults({ data, stats }: NEOResultsProps) {
   const [selectedNEO, setSelectedNEO] = useState<NEO | null>(data[0] || null);
+  const { filter, setFilter, filteredData, counts } = useFilteredNeoData(data);
+
+  // Update selected NEO if it's not in filtered results
+  useMemo(() => {
+    if (selectedNEO && !filteredData.find((neo) => neo.id === selectedNEO.id)) {
+      setSelectedNEO(filteredData[0] || null);
+    }
+  }, [filteredData, selectedNEO]);
 
   if (data.length === 0) {
     return null;
@@ -47,11 +57,19 @@ export function NEOResults({ data, stats }: NEOResultsProps) {
         </div>
       </div>
 
+      {/* Filter Controls */}
+      <NEOFilters
+        filter={filter}
+        setFilter={setFilter}
+        counts={counts}
+        filteredCount={filteredData.length}
+      />
+
       {/* Main Content: Preview Cards + Details */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* NEO Preview Cards */}
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-max">
-          {data.map((neo) => (
+          {filteredData.map((neo) => (
             <NEOPreview
               key={neo.id}
               neo={neo}
