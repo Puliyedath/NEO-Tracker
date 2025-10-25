@@ -1,10 +1,17 @@
-import type { Metadata } from "next";
-import "./globals.css";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Product Catalog",
-  description: "A modern product catalog application",
-};
+import "./globals.css";
+import { PageContainer } from "@/components/page-container";
+import { PageTitle } from "@/components/page-title";
+import dynamic from "next/dynamic";
+
+// Import Starfield with SSR disabled to avoid hydration mismatch
+const Starfield = dynamic(
+  () => import("@/components/starfield").then((mod) => mod.Starfield),
+  {
+    ssr: false,
+  }
+);
 
 export default function RootLayout({
   children,
@@ -13,7 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <PageContainer background={<Starfield />} title={<PageTitle />}>
+          {children}
+        </PageContainer>
+      </body>
     </html>
   );
 }

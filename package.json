@@ -7,32 +7,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "tsx scripts/seed-example.ts",
-    "db:clear": "tsx scripts/clear-database.ts",
-    "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.1",
-    "mongodb": "^6.20.0",
     "next": "16.0.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
-    "prisma": "^6.17.1",
     "tailwindcss": "^4",
-    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
