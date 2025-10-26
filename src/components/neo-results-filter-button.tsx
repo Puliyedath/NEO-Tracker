@@ -9,7 +9,7 @@ interface FilterButtonProps {
   variant?: "default" | "danger" | "success";
 }
 
-export function FilterButton({
+export function NeoResultsFilterButton({
   type,
   currentFilter,
   count,

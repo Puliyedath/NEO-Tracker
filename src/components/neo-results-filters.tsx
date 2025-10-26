@@ -1,7 +1,7 @@
 import type { FilterType } from "@/hooks/useFilteredNeoData";
-import { FilterButton } from "./filter-button";
+import { NeoResultsFilterButton } from "./neo-results-filter-button";
 
-interface NEOFiltersProps {
+interface NEOResultFiltersProps {
   filter: FilterType;
   setFilter: (filter: FilterType) => void;
   counts: {
@@ -12,18 +12,18 @@ interface NEOFiltersProps {
   filteredCount: number;
 }
 
-export function NEOFilters({
+export function NEOResultFilters({
   filter,
   setFilter,
   counts,
   filteredCount,
-}: NEOFiltersProps) {
+}: NEOResultFiltersProps) {
   return (
     <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
       <div className="flex items-center gap-2">
         <span className="text-white/70 text-sm font-medium">Filter:</span>
         <div className="flex gap-2">
-          <FilterButton
+          <NeoResultsFilterButton
             type="all"
             currentFilter={filter}
             count={counts.total}
@@ -31,7 +31,7 @@ export function NEOFilters({
             onClick={() => setFilter("all")}
             variant="default"
           />
-          <FilterButton
+          <NeoResultsFilterButton
             type="hazardous"
             currentFilter={filter}
             count={counts.hazardous}
@@ -39,7 +39,7 @@ export function NEOFilters({
             onClick={() => setFilter("hazardous")}
             variant="danger"
           />
-          <FilterButton
+          <NeoResultsFilterButton
             type="safe"
             currentFilter={filter}
             count={counts.safe}

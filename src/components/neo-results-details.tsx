@@ -1,11 +1,11 @@
 import type { NEO } from "@/types/neo";
 
-interface NEODetailsProps {
+interface NEOResultDetailsProps {
   neo: NEO;
   onClose?: () => void;
 }
 
-export function NEODetails({ neo, onClose }: NEODetailsProps) {
+export function NEOResultDetails({ neo, onClose }: NEOResultDetailsProps) {
   const formatNumber = (num: number | string, decimals: number = 2) => {
     const value = typeof num === "string" ? parseFloat(num) : num;
     return value.toLocaleString(undefined, {

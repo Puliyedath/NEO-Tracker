@@ -1,11 +1,11 @@
 import type { NEO } from "@/types/neo";
 
-interface NEOPreviewProps {
+interface NEOResultPreviewProps {
   neo: NEO;
   onClick?: () => void;
 }
 
-export function NEOPreview({ neo, onClick }: NEOPreviewProps) {
+export function NEOResultPreview({ neo, onClick }: NEOResultPreviewProps) {
   const diameterAvg =
     (neo.estimated_diameter_feet_min + neo.estimated_diameter_feet_max) / 2;
   const velocity = parseFloat(neo.relative_velocity_miles_per_hour);
@@ -40,6 +40,16 @@ export function NEOPreview({ neo, onClick }: NEOPreviewProps) {
           <p className="text-white/50 text-sm mb-1">Diameter</p>
           <p className="text-white/90 font-medium">
             {diameterAvg.toLocaleString(undefined, {
+              maximumFractionDigits: 0,
+            })}{" "}
+            ft
+          </p>
+          <p className="text-white/30 text-xs mt-1">
+            {neo.estimated_diameter_feet_min.toLocaleString(undefined, {
+              maximumFractionDigits: 0,
+            })}{" "}
+            -{" "}
+            {neo.estimated_diameter_feet_max.toLocaleString(undefined, {
               maximumFractionDigits: 0,
             })}{" "}
             ft
