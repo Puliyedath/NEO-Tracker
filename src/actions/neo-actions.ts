@@ -1,8 +1,13 @@
 "use server";
 
 import { NEOApiResponse, flattenNEO, type NEO } from "@/types/neo";
+import { withCache, ttlGenerators } from "@/lib/cache-decorator";
 
-export async function fetchNEOData(date: string): Promise<{
+/**
+ * Internal function that fetches NEO data from NASA API
+ * This is the base function that will be wrapped with caching
+ */
+async function fetchNEODataInternal(date: string): Promise<{
   success: boolean;
   data?: NEO[];
   error?: string;
@@ -96,3 +101,14 @@ export async function fetchNEOData(date: string): Promise<{
     };
   }
 }
+
+/**
+ * Fetch NEO data with caching
+ * Uses read-through cache pattern with dynamic TTL based on date
+ */
+export const fetchNEOData = withCache(fetchNEODataInternal, {
+  prefix: "neo",
+  keyGenerator: (date) => date as string,
+  ttlGenerator: (date) => ttlGenerators.dateBasedTTL(date as string),
+  shouldCache: (result) => result.success, // Only cache successful results
+});
