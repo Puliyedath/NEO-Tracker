@@ -5,6 +5,7 @@ import type { NEO } from "@/types/neo";
 import { NEOPreview } from "./neo-preview";
 import { NEODetails } from "./neo-details";
 import { NEOFilters } from "./neo-filters";
+import { EmptyState } from "./empty-state";
 import { useFilteredNeoData } from "@/hooks/useFilteredNeoData";
 
 interface NEOResultsProps {
@@ -66,23 +67,37 @@ export function NEOResults({ data, stats }: NEOResultsProps) {
       />
 
       {/* Main Content: Preview Cards + Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* NEO Preview Cards */}
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-max">
-          {filteredData.map((neo) => (
-            <NEOPreview
-              key={neo.id}
-              neo={neo}
-              onClick={() => setSelectedNEO(neo)}
-            />
-          ))}
-        </div>
+      {filteredData.length === 0 || data.length === 0 ? (
+        <EmptyState
+          title="No NEOs Found"
+          message={
+            filter === "hazardous"
+              ? "No potentially hazardous asteroids found for this date. That's good news!"
+              : filter === "safe"
+              ? "No safe asteroids found for this date."
+              : "No near-Earth objects detected for this date."
+          }
+          icon={filter === "hazardous" ? "🛡️" : "🌌"}
+        />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* NEO Preview Cards */}
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-max">
+            {filteredData.map((neo) => (
+              <NEOPreview
+                key={neo.id}
+                neo={neo}
+                onClick={() => setSelectedNEO(neo)}
+              />
+            ))}
+          </div>
 
-        {/* Selected NEO Details - Right on large screens, below on small */}
-        <div className="lg:col-span-1 lg:sticky lg:top-6 lg:self-start">
-          {selectedNEO && <NEODetails neo={selectedNEO} />}
+          {/* Selected NEO Details - Right on large screens, below on small */}
+          <div className="lg:col-span-1 lg:sticky lg:top-6 lg:self-start">
+            {selectedNEO && <NEODetails neo={selectedNEO} />}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
