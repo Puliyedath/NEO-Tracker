@@ -1,7 +1,34 @@
 "use server";
 
+import { z } from "zod";
 import { NEOApiResponse, flattenNEO, type NEO } from "@/types/neo";
 import { withCache, ttlGenerators } from "@/lib/cache-decorator";
+
+/**
+ * Zod Date validation schema
+ */
+const dateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format")
+  .refine(
+    (date) => {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    },
+    { message: "Invalid date" }
+  )
+  .refine(
+    (date) => {
+      const parsedDate = new Date(date);
+      const minDate = new Date("1995-01-01"); // start date that we want to support
+      const maxDate = new Date();
+      maxDate.setHours(23, 59, 59, 999); // End of today
+      return parsedDate >= minDate && parsedDate <= maxDate;
+    },
+    {
+      message: "Date must be between 1995-01-01 and today",
+    }
+  );
 
 /**
  * Internal function that fetches NEO data from NASA API
@@ -18,6 +45,15 @@ async function fetchNEODataInternal(date: string): Promise<{
   };
 }> {
   try {
+    // Validate date format and range
+    const dateValidation = dateSchema.safeParse(date);
+    if (!dateValidation.success) {
+      return {
+        success: false,
+        error: dateValidation.error.issues[0].message,
+      };
+    }
+
     const apiKey = process.env.NASA_API_KEY;
 
     if (!apiKey) {
