@@ -4,11 +4,35 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ### Prerequisites
 
-Clone the repository and install dependencies:
+Clone the repository:
 
 ```bash
 git clone <repository-url>
 cd NEO-tracker
+```
+
+### Configure Environment Variables
+
+Create a `.env.local` file in the root directory of the project:
+
+```bash
+touch .env.local
+```
+
+Add the following environment variables to the `.env.local` file:
+
+```
+REDIS_URL=redis://localhost:6379
+NASA_API_KEY=lTHPxbpwqnn3thI5aiCieLtOpT1MZ85pxbkRI9tN
+```
+
+**⚠️ DISCLAIMER:** The NASA API key provided above is for demonstration purposes only. In a production environment, sensitive credentials should **never** be committed to version control and should be managed through a secure secret management system (e.g., AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, or environment-specific CI/CD secrets).
+
+### Install Dependencies
+
+Install the required Node.js packages:
+
+```bash
 npm ci
 ```
 
@@ -20,6 +44,14 @@ Start the Redis Docker container that acts as a read-through cache:
 docker-compose up -d
 ```
 
+Wait for the container to be fully up and running by tailing the logs:
+
+```bash
+docker-compose logs -f redis
+```
+
+Once you see the message `Ready to accept connections`, the Redis cache is ready. Press `Ctrl+C` to exit the logs.
+
 ### Start the Application
 
 Once the Redis container is up and running, start the Next.js app:
@@ -27,8 +59,6 @@ Once the Redis container is up and running, start the Next.js app:
 ```bash
 npm run dev
 ```
-
-**Note:** The variables in `.env.local` should ideally come from a secret manager, however, they have been checked in for convenience.
 
 ### Access the Application
 
